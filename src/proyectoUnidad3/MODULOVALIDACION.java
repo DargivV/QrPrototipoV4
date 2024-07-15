@@ -1,10 +1,20 @@
 package proyectoUnidad3;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 public class MODULOVALIDACION extends javax.swing.JFrame {
     
@@ -140,7 +151,7 @@ private void guardarDatosEnArchivo(File archivo) {
    
        public MODULOVALIDACION() {
         initComponents();
-        
+        this.setLocationRelativeTo(this);
         ini=fin=pFound=null;
         
         miModelo=new DefaultTableModel(data, cabecera);
@@ -153,36 +164,42 @@ private void guardarDatosEnArchivo(File archivo) {
     private void initComponents() {
 
         jScrollBar1 = new javax.swing.JScrollBar();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         txtCodigo = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtApellidoPaterno = new javax.swing.JTextField();
-        btnRestaurar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRegistros = new javax.swing.JTable();
         cbxEstadoAF = new javax.swing.JComboBox<>();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         btnCaargar = new javax.swing.JButton();
         txtDNI = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
         txtESCuela = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
         txtTurno = new javax.swing.JComboBox<>();
-        jButton4 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         btnCaargar1 = new javax.swing.JButton();
         btnGrabar1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        SALIDA = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        btnRestaurar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(71, 65, 163));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -190,28 +207,11 @@ private void guardarDatosEnArchivo(File archivo) {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setText("CODIGO(Beta)");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 100, -1));
-
-        jLabel3.setText("NOMBRE");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 70, -1));
-
-        jLabel4.setText("TURNO  ");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 70, -1));
-
-        jLabel5.setText("ESTADO ");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 130, 30));
-        getContentPane().add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 150, 32));
-        getContentPane().add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 258, 150, 40));
-        getContentPane().add(txtApellidoPaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 150, 40));
-
-        btnRestaurar.setText("Vaciar Casilla");
-        btnRestaurar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRestaurarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnRestaurar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, 510, 60));
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 240, 32));
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 310, 150, 40));
+        jPanel1.add(txtApellidoPaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 150, 40));
 
         tblRegistros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -226,7 +226,7 @@ private void guardarDatosEnArchivo(File archivo) {
         ));
         jScrollPane1.setViewportView(tblRegistros);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 350, 540, 160));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 400, 540, 160));
 
         cbxEstadoAF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ADENTRO", "AFUERA" }));
         cbxEstadoAF.addActionListener(new java.awt.event.ActionListener() {
@@ -234,15 +234,7 @@ private void guardarDatosEnArchivo(File archivo) {
                 cbxEstadoAFActionPerformed(evt);
             }
         });
-        getContentPane().add(cbxEstadoAF, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 180, 50));
-
-        jLabel9.setText("APELLIDOS");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 80, -1));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel6.setText("ESCRITURA DE LOS DATOS ");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 320, -1));
+        jPanel1.add(cbxEstadoAF, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 180, 50));
 
         btnCaargar.setBackground(new java.awt.Color(204, 204, 255));
         btnCaargar.setText("Abrir");
@@ -251,35 +243,21 @@ private void guardarDatosEnArchivo(File archivo) {
                 btnCaargarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCaargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, 170, 60));
-        getContentPane().add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 140, 30));
-
-        jLabel10.setText("DNI");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 130, -1));
+        jPanel1.add(btnCaargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 290, 170, 60));
+        jPanel1.add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 470, 150, 30));
 
         txtESCuela.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtESCuelaActionPerformed(evt);
             }
         });
-        getContentPane().add(txtESCuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 470, 140, 30));
-
-        jLabel12.setText("ESCUELA");
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 130, -1));
+        jPanel1.add(txtESCuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 520, 150, 30));
 
         txtTurno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-------------", "Mañana", "Tarde", "Noche" }));
-        getContentPane().add(txtTurno, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 360, 120, 40));
-
-        jButton4.setText("<---");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+        jPanel1.add(txtTurno, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 410, 150, 40));
 
         jSeparator1.setForeground(new java.awt.Color(102, 102, 102));
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, 520, 20));
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 270, 520, 20));
 
         btnCaargar1.setBackground(new java.awt.Color(204, 204, 255));
         btnCaargar1.setText("Abrir de ...");
@@ -289,7 +267,7 @@ private void guardarDatosEnArchivo(File archivo) {
                 btnCaargar1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCaargar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 240, 100, 60));
+        jPanel1.add(btnCaargar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 290, 100, 60));
 
         btnGrabar1.setBackground(new java.awt.Color(204, 255, 204));
         btnGrabar1.setText("Guardar en ... ");
@@ -298,15 +276,16 @@ private void guardarDatosEnArchivo(File archivo) {
                 btnGrabar1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnGrabar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 130, 60));
+        jPanel1.add(btnGrabar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 290, 130, 60));
 
+        jButton1.setBackground(new java.awt.Color(250, 250, 250));
         jButton1.setText("Buscar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 120, 150, 40));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 120, 320, 40));
 
         jButton2.setBackground(new java.awt.Color(204, 255, 204));
         jButton2.setText("Guardar");
@@ -315,15 +294,109 @@ private void guardarDatosEnArchivo(File archivo) {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, 100, 60));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 290, 100, 60));
 
+        jButton3.setBackground(new java.awt.Color(250, 250, 250));
         jButton3.setText("Actualisar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 140, 510, 40));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 190, 510, 40));
+
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        SALIDA.setBackground(new java.awt.Color(153, 153, 153));
+        SALIDA.setFont(new java.awt.Font("Reem Kufi", 0, 18)); // NOI18N
+        SALIDA.setText("x");
+        SALIDA.setBorder(null);
+        SALIDA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SALIDAActionPerformed(evt);
+            }
+        });
+        jPanel2.add(SALIDA, new org.netbeans.lib.awtextra.AbsoluteConstraints(913, 4, 50, 50));
+
+        jButton4.setBackground(new java.awt.Color(153, 153, 153));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setText("<");
+        jButton4.setActionCommand("<\n");
+        jButton4.setBorder(null);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 80, 40));
+
+        jLabel6.setFont(new java.awt.Font("Reem Kufi", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 51, 102));
+        jLabel6.setText("VALIDACION DE LOS DATOS ");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 20, 210, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 960, 50));
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 13, 970, 30));
+
+        jButton6.setBackground(new java.awt.Color(250, 250, 250));
+        jButton6.setText("Qr_Read");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, 150, 40));
+
+        jLabel2.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel2.setText("CODIGO");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 100, -1));
+
+        jLabel7.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("NOMBRE");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel11.setText("APELLIDOS");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel8.setText("TURNO  ");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 80, -1));
+
+        jLabel13.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel13.setText("ESTADO");
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 100, 50));
+
+        jLabel14.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel14.setText("DNI");
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 110, -1));
+
+        jLabel15.setFont(new java.awt.Font("Reem Kufi", 0, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel15.setText("ESCUELA");
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 520, 110, -1));
+
+        btnRestaurar1.setBackground(new java.awt.Color(51, 51, 51));
+        btnRestaurar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Multimedias/1basuraCwe.png"))); // NOI18N
+        btnRestaurar1.setBorder(null);
+        btnRestaurar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestaurar1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnRestaurar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 130, 40, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 960, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -357,10 +430,6 @@ private void guardarDatosEnArchivo(File archivo) {
 }
     
 
-
-    private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed
-        LimpiarEntradas(); 
-    }//GEN-LAST:event_btnRestaurarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
       
@@ -477,6 +546,41 @@ private void guardarDatosEnArchivo(File archivo) {
         LimpiarEntradas(); 
         VerDatos(1);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void SALIDAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SALIDAActionPerformed
+        // TODO add your handling code here:
+        System.exit(WIDTH);
+    }//GEN-LAST:event_SALIDAActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // Qr pa leer
+
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+            System.out.println("Ruta del archivo seleccionado: " + archivo.getAbsolutePath()); // Verificar la ruta
+            String rutA=(archivo.getAbsolutePath());
+
+            //-------------------
+
+            try (InputStream barcodeInputStream = new FileInputStream(rutA)) {
+                BufferedImage barcBufferredImage = ImageIO.read(barcodeInputStream);
+                LuminanceSource source = new BufferedImageLuminanceSource(barcBufferredImage);
+                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                Reader reader = new MultiFormatReader();
+                Result result = reader.decode(bitmap);
+
+                txtCodigo.setText(result.getText());
+
+            }
+            catch(Exception e){}
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void btnRestaurar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurar1ActionPerformed
+        LimpiarEntradas();
+
+    }//GEN-LAST:event_btnRestaurar1ActionPerformed
 
    
     public static void main(String args[]) {
@@ -634,23 +738,28 @@ private void guardarDatosEnArchivo(File archivo) {
      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton SALIDA;
     private javax.swing.JButton btnCaargar;
     private javax.swing.JButton btnCaargar1;
     private javax.swing.JButton btnGrabar1;
-    private javax.swing.JButton btnRestaurar;
+    private javax.swing.JButton btnRestaurar1;
     private javax.swing.JComboBox<String> cbxEstadoAF;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
